@@ -21,7 +21,7 @@
       <tr>
         <th class="th-style">Código</th>
         <th class="th-style">Descrição</th>
-<!--        <th class="th-style">Departamento</th>-->
+        <th class="th-style">Departamento</th>
         <th class="th-style">Preço</th>
         <th class="th-style text-center">Ações</th>
       </tr>
@@ -41,7 +41,9 @@
         <td class="td-style">
           <p class="text-gray-900 whitespace-no-wrap">{{ product.descricao }}</p>
         </td>
-<!--        <td class="td-style">{{ (departamentos$ | async)?.find(d => d.id === product.departamentoId)?.nome || 'N/A' }}</td>- -->
+        <td class="td-style">
+          <p class="text-gray-900 whitespace-no-wrap">{{ product.departamentoNome }}</p>
+        </td>
         <td class="td-style">{{ product.preco | currency:'BRL' }}</td>
         <td class="td-style text-center">
           <button (click)="openEditModal(product)" class="btn-icon" title="Editar"><i class="fas fa-pencil-alt"></i></button>

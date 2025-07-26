@@ -12,17 +12,17 @@ registerLocaleData(localePt);
 
 @Component({
   selector: 'app-root',
-  standalone: true, // Define o componente como autônomo
+  standalone: true,
   imports: [
-    CommonModule, // Necessário para diretivas como *ngIf, *ngFor e pipes (async, currency)
-    ReactiveFormsModule // Necessário para formulários reativos
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  produtos$: Observable<Produto[]> = of([]); // Inicializado para evitar o erro TS2564
-  departamentos$: Observable<Departamento[]> = of([]); // Inicializado para evitar o erro TS2564
+  produtos$: Observable<Produto[]> = of([]);
+  departamentos$: Observable<Departamento[]> = of([]);
 
   productForm: FormGroup;
   isModalOpen = false;
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
 
   loadProducts(): void {
     this.isLoading = true;
-    this.produtos$ = this.apiService.getProducts();
+    this.produtos$ = this.apiService.getProdutosTodos();
     this.produtos$.subscribe({
       next: () => this.isLoading = false,
       error: () => this.isLoading = false
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
   }
 
   loadDepartments(): void {
-    this.departamentos$ = this.apiService.getDepartments();
+    this.departamentos$ = this.apiService.getDepartamentos();
   }
 
   openAddModal(): void {
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
 
   onSubmit(): void {
     if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched(); // Marca campos como tocados para exibir erros
+      this.productForm.markAllAsTouched();
       return;
     }
 
@@ -93,10 +93,9 @@ export class AppComponent implements OnInit {
     console.log(productData);
 
     const operation$ = this.isEditing
-      ? this.apiService.updateProduct(productData.id, { ...productData, status: true })
-      : this.apiService.createProduct(this.getNewProductData(productData));
+      ? this.apiService.updateProdutos(productData.id, { ...productData, status: true })
+      : this.apiService.createProdutos(this.getNewProductData(productData));
 
-    // CORREÇÃO: Adicionado 'as Observable<any>' para resolver o conflito de tipos.
     (operation$ as Observable<any>).subscribe(() => {
       this.loadProducts();
       this.closeModal();
@@ -110,7 +109,7 @@ export class AppComponent implements OnInit {
 
   onDelete(id: string): void {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
-      this.apiService.deleteProduct(id).subscribe(() => {
+      this.apiService.deleteProdutos(id).subscribe(() => {
         this.loadProducts();
       });
     }
